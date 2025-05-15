@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import { api } from '@/convex/_generated/api'
 import { useQuery } from 'convex/react'
 import React from 'react'
@@ -14,7 +14,7 @@ const MesCategories = () => {
             <CarouselContent>
                 {categories?.map((category, index) =>(
                     <CarouselItem  key={index}>
-                         <FoodCard image={category.imageLink} title={category.title} />
+                         <FoodCard image={category.imageLink} title={category.title} link={`/categories/${category._id}`} />
                     </CarouselItem>
                 ))}
             </CarouselContent>
