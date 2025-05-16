@@ -4,9 +4,9 @@ import MesCategories from "@/components/MesCategories";
 
 export default function Home() {
   return (
-    <div className="lg:hidden  relative w-full  flex flex-col ">
+    <div className="lg:hidden bg-myRed relative w-full min-h-screen flex flex-col">
       <Header />
-     <div className='flex flex-col gap-y-3 '>
+     <div className='flex flex-col gap-y-3 mt-16 '>
         <p className=' font-bold text-3xl text-beige text-center'>
           Classic  made for you
         </p>

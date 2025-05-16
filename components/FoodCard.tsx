@@ -11,7 +11,7 @@ type FoodCardProps = {
 const FoodCard = ({image, title, link}: FoodCardProps) => {
   const router = useRouter()
   return (
-    <Card onClick={()=> router.push(link)} className='w-full h-[500px] px-3 flex bg-myYellow border-none'>
+    <Card onClick={()=> router.push(link)} className='w-full h-[400px] px-3 flex bg-myYellow border-none'>
         <CardHeader className='relative  h-[450px] '>
             <Image src={image} alt={title} fill objectFit='cover'className=' object-cover rounded-lg' />
         </CardHeader>

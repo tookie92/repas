@@ -29,11 +29,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-y-hidden`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-y-hidden `}
       >
             <ConvexClientProvider>
              
-              <div className=" bg-myRed min-h-screen py-18">
+              <div className="h-screen bg-beige">
                 {children}
               </div>
             </ConvexClientProvider>
