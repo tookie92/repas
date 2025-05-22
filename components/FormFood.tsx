@@ -1,8 +1,11 @@
 import React from 'react'
+import BasicInfo from './step/BasicInfo'
 
 const FormFood = () => {
   return (
-    <div>FormFood</div>
+    <>
+      <BasicInfo />
+    </>
   )
 }
 
