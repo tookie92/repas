@@ -14,7 +14,7 @@ export default defineSchema({
         categoryId: v.id('categories'),
         steps: v.array(v.object({
           stepNumber: v.number(),
-          instruction: v.string(),
+          instruction: v.string(), 
         })),
       }).index('by_category', ['categoryId']),
     
