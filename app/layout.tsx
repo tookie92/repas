@@ -28,10 +28,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
+      {/* <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased  `}
-      >
-      {/* <body className={geistSans.variable}> */}
+      > */}
+      <body className={`${geistSans.variable} ${geistMono.variable}`}>
             <ConvexClientProvider>
              
               <div className="h-screen bg-beige overflow-y-hidden">

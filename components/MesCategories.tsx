@@ -8,9 +8,9 @@ import { Carousel, CarouselContent, CarouselItem } from './ui/carousel'
 const MesCategories = () => {
     const categories = useQuery(api.categories.getCategories)
   return (
-    <div className='w-full  h-[500px]'>
+    <div className='w-full  h-[800px] flex items-center'>
        
-        <Carousel>
+        <Carousel className='w-full h-full'>
             <CarouselContent>
                 {categories?.map((category, index) =>(
                     <CarouselItem  key={index}>

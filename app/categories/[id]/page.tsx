@@ -45,10 +45,12 @@ const CategoriesPage = () => {
   // Aucune recette trouvée
   if (!filteredFoods || filteredFoods.length === 0) {
     return (
-      <div className='flex flex-col items-center justify-center py-10'>
+      <div className='flex flex-col h-full items-center justify-center py-10'>
         <p className='text-2xl font-bold text-myGreen'>
           {searchQuery ? 'Aucun résultat' : 'Aucune recette trouvée'}
+
         </p>
+        <Button onClick={()=> router.back()} className='mt-4'>Retour</Button>
         {searchQuery && (
           <p className='text-xl text-myGreen'>Recherche : `{searchQuery}`</p>
         )}
@@ -87,7 +89,7 @@ const CategoriesPage = () => {
       </div>
 
       {/* Liste des recettes */}
-      <ScrollArea className='h-[600px] w-full'>
+      <ScrollArea className='h-full  w-full mt-7'>
         {filteredFoods.map((item) => (
           <div 
             key={item._id}

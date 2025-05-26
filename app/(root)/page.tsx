@@ -1,20 +1,20 @@
-
+"use client";
 import { Header } from "@/components/Header";
 import MesCategories from "@/components/MesCategories";
 
 export default function Home() {
   return (
-    <div className="lg:hidden bg-myRed relative w-full min-h-screen flex flex-col">
+    <div className="lg:hidden bg-myRed relative items-center justify-center w-full min-h-screen flex flex-col pt-12">
       <Header />
-     <div className='flex flex-col gap-y-3 mt-16 '>
+     <div className='flex flex-col gap-y-3 items-center justify-center '>
         <p className=' font-bold text-3xl text-beige text-center'>
           Classic  made for you
         </p>
-        {/* <p className=' font-sans text-xl  text-beige text-center'>
+        <p className=' font-sans text-xl  text-beige text-center'>
           Try our ready in minute frozen meals
-        </p> */}
+        </p>
       </div>
-      <div className="px-8 mt-7">
+      <div className="px-8 flex flex-col gap-y-3 mt-7">
         <MesCategories />
       </div>
     </div>
