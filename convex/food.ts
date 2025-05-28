@@ -53,6 +53,15 @@ export const addFood = mutation({
   },
 });
 
+export const deleteFood = mutation({
+  args: { foodId: v.id('food') },
+  handler: async (ctx, args) => {
+    await ctx.db.delete( args.foodId);
+  },
+});
+
+
+
 // Mutation pour générer une URL d'upload
 export const generateUploadUrl = mutation(async (ctx) => {
   return await ctx.storage.generateUploadUrl();

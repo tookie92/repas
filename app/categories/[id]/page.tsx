@@ -5,7 +5,10 @@ import { Header } from '@/components/Header';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
+  DialogClose,
   DialogContent,
+  DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -14,7 +17,8 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { api } from '@/convex/_generated/api';
 import { Id } from '@/convex/_generated/dataModel';
-import { useQuery } from 'convex/react';
+import { useMutation, useQuery } from 'convex/react';
+import { EyeIcon, Trash2Icon } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react'
 
@@ -22,10 +26,12 @@ const CategoriesPage = () => {
   const router = useRouter();
   const params = useParams();
   const categoryId = params.id as Id<"categories">;
+
   const [searchQuery, setSearchQuery] = useState('');
   
   // Récupère les données de la catégorie avec ses recettes
   const categoryWithFoods = useQuery(api.categories.getCategoryWithFoods, { categoryId });
+  const deleteFood = useMutation(api.food.deleteFood);
 
   // Filtre les recettes selon la recherche
   const filteredFoods = categoryWithFoods?.food.filter((food) => {
@@ -79,7 +85,7 @@ const CategoriesPage = () => {
               Ajouter une recette
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl p-6">
+          <DialogContent className=" w-full">
             <DialogHeader>
               <DialogTitle className="text-2xl">Nouvelle Recette</DialogTitle>
             </DialogHeader>
@@ -89,11 +95,10 @@ const CategoriesPage = () => {
       </div>
 
       {/* Liste des recettes */}
-      <ScrollArea className='h-full  w-full mt-7'>
+      <ScrollArea className='h-[700px]  w-full mt-7'>
         {filteredFoods.map((item) => (
           <div 
             key={item._id}
-            onClick={() => router.push(`/categories/${categoryId}/food/${item._id}`)}
             className='p-3 bg-myYellow flex flex-row rounded-lg mb-2 cursor-pointer hover:bg-myLightYellow transition-colors'
           >
             <div className='mr-4'>
@@ -106,9 +111,50 @@ const CategoriesPage = () => {
               <p className='text-myGreen text-lg font-bold'>{item.title}</p>
               <p className='text-myGreen line-clamp-2'>{item.description}</p>
               <p className='text-myGreen'>Pour {item.person} personne{item.person > 1 ? 's' : ''}</p>
+              <div className='flex gap-x-3 mt-2 items-center'>
+               <EyeIcon onClick={() => router.push(`/categories/${categoryId}/food/${item._id}`)}
+                  className='text-myGreen w-5 h-5 hover:text-myDarkGreen'
+                />
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Trash2Icon
+                      className='text-myGreen  w-5 h-5 hover:text-myDarkGreen'
+                    />
+                </DialogTrigger>
+                  <DialogContent className=" w-full">
+                    <DialogHeader>
+                      <DialogTitle className="text-2xl">Supprimer la recette</DialogTitle>
+                    <DialogDescription>
+                      <p>Êtes-vous sûr de vouloir supprimer cette recette ?</p>
+                    </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter className='flex h-full bg-yellow-300 items-center justify-center  mt-4'>
+                        <DialogClose asChild>
+                        <Button type="button" variant="secondary">
+                          Close
+                        </Button>
+                      </DialogClose>
+                      <Button 
+                      className="bg-red-500 hover:bg-red-600 "
+                      onClick={() => {
+                        deleteFood({ foodId: item._id })
+                          .then(() => {
+                            router.refresh();
+                          });
+                      }}
+                    >
+                      Delete
+                    </Button>
+                   
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+                
+              </div>
             </div>
           </div>
         ))}
+        <div className='h-[200px] w-full'/>
       </ScrollArea>
     </div>
   );

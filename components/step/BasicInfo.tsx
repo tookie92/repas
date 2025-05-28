@@ -5,7 +5,7 @@ import { basicInfoSchema } from "../../lib/secschema";
 import { useFoodFormStore } from "@/store/foodFormStore";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
+import { Form, FormControl,  FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { z } from "zod";
 import { Textarea } from "../ui/textarea";
 
@@ -30,8 +30,8 @@ const BasicInfo = ({ onNext }: BasicInfoProps) => {
     console.log(values)
     }
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+    <Form {...form} >
+      <form className="flex flex-col gap-y-10" onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
           name="title"
@@ -41,9 +41,7 @@ const BasicInfo = ({ onNext }: BasicInfoProps) => {
               <FormControl>
                 <Input placeholder="shadcn" {...field} />
               </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
+             
               <FormMessage />
             </FormItem>
           )}
@@ -57,9 +55,7 @@ const BasicInfo = ({ onNext }: BasicInfoProps) => {
               <FormControl>
                 <Textarea placeholder="shadcn" {...field} />
               </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
+             
               <FormMessage />
             </FormItem>
           )}
@@ -79,15 +75,13 @@ const BasicInfo = ({ onNext }: BasicInfoProps) => {
                 value={field.value}
               />
               </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
+            
               <FormMessage />
             </FormItem>
           )}
         />
        
-        <Button type="submit">Suivant</Button>
+        <Button className="mt-2" type="submit">Suivant</Button>
         </form>
     </Form>
   );
