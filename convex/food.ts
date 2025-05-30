@@ -1,12 +1,14 @@
-
+import { Id } from './_generated/dataModel';
 import { mutation, query } from './_generated/server';
 import { v } from 'convex/values';
 
-export const addFood = mutation({
+// upsertFood
+export const upsertFood = mutation({
   args: {
+    foodId: v.optional(v.id('food')), // Nouveau - ID optionnel pour les mises à jour
     title: v.string(),
     description: v.string(),
-    imageStorageId: v.id('_storage'), // Stocke l'ID de stockage plutôt qu'une URL
+    imageStorageId: v.id('_storage'),
     person: v.number(),
     categoryId: v.id('categories'),
     steps: v.array(v.object({
@@ -19,40 +21,54 @@ export const addFood = mutation({
     })),
   },
   handler: async (ctx, args) => {
-    // 1. Vérifier que l'image existe bien dans le stockage
+    // Vérification de l'image
     const imageUrl = await ctx.storage.getUrl(args.imageStorageId);
     if (!imageUrl) {
-      throw new Error("L'image associée n'a pas été trouvée dans le stockage");
+      throw new Error("L'image n'a pas été trouvée dans le stockage");
     }
 
-    // 2. Insérer le nouveau plat avec le storageId de l'image
-    const foodId = await ctx.db.insert('food', {
+    // Données communes
+    const foodData = {
       title: args.title,
       description: args.description,
-      imageLink: args.imageStorageId, // Stocke l'ID de stockage
+      imageLink: args.imageStorageId,
       person: args.person,
       categoryId: args.categoryId,
       steps: args.steps,
-    });
+    };
 
-    // 3. Associer les ingrédients au plat
-    for (const ingredient of args.ingredients) {
-      await ctx.db.insert('foodIngredients', {
-        foodId,
-        ingredientId: ingredient.ingredientId,
-        quantity: ingredient.quantity,
-      });
+    // Logique d'upsert
+    if (args.foodId) {
+      // Mise à jour existante
+      await ctx.db.patch(args.foodId, foodData);
+      
+      // Supprime les anciennes associations d'ingrédients
+      const existingIngredients = await ctx.db
+        .query('foodIngredients')
+        .withIndex('by_food', q => q.eq('foodId', args.foodId as Id<'food'>))
+        .collect();
+      
+      await Promise.all(existingIngredients.map(ing => ctx.db.delete(ing._id)));
+    } else {
+      // Création nouvelle
+      args.foodId = await ctx.db.insert('food', foodData);
     }
 
-    // // 4. Déclencher une action interne si nécessaire (optionnel)
-    // await ctx.scheduler.runAfter(0, internal.food.notifyNewFood, {
-    //   foodId,
-    // });
+    // Ajoute les nouveaux ingrédients (pour create et update)
+    await Promise.all(args.ingredients.map(ingredient =>
+      ctx.db.insert('foodIngredients', {
+        foodId: args.foodId as Id<'food'>,
+        ingredientId: ingredient.ingredientId,
+        quantity: ingredient.quantity,
+      })
+    ));
 
-    return foodId;
+    return args.foodId;
   },
 });
 
+
+// deleteFood
 export const deleteFood = mutation({
   args: { foodId: v.id('food') },
   handler: async (ctx, args) => {
@@ -60,6 +76,27 @@ export const deleteFood = mutation({
   },
 });
 
+// getFood
+export const getFood = query({
+  args: { foodId: v.id('food') },
+  handler: async (ctx, args) => {
+    const food = await ctx.db.get(args.foodId);
+    if (!food) throw new Error("Plat non trouvé");
+
+    const ingredients = await ctx.db
+      .query('foodIngredients')
+      .withIndex('by_food', q => q.eq('foodId', args.foodId))
+      .collect();
+
+    return {
+      ...food,
+      ingredients: ingredients.map(i => ({
+        ingredientId: i.ingredientId,
+        quantity: i.quantity
+      }))
+    };
+  },
+});
 
 
 // Mutation pour générer une URL d'upload
