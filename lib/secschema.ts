@@ -26,7 +26,10 @@ export const basicInfoSchema = z.object({
 
 // Schéma pour l'image
 export const imageSchema = z.object({
-  imageLink: z.instanceof(File, { message: "L'image est requise" })
+  imageLink: z.union([
+    z.instanceof(File, { message: "L'image est requise" }),
+    z.null() // Accepte maintenant null
+  ]).optional(), // Rend le champ optionnel
 });
 
 // Schéma pour les étapes

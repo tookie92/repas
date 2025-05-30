@@ -8,10 +8,10 @@ import { useFoodFormStore } from "@/store/foodFormStore";
 import { z } from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-// import { useToast } from "../ui/use-toast";
 import { Loader2 } from "lucide-react";
+import Image from "next/image";
 
 type ImageUploadProps = {
   onNext: () => void;
@@ -19,15 +19,18 @@ type ImageUploadProps = {
 };
 
 const ImageUpload = ({ onNext, onPrev }: ImageUploadProps) => {
-  // const { toast } = useToast();
   const { setData, data } = useFoodFormStore();
   const generateUploadUrl = useMutation(api.food.generateUploadUrl);
+  const getImageUrl = useQuery(api.food.getImageUrl, 
+    data.imageLink ? { storageId: data.imageLink } : "skip");
   const [isUploading, setIsUploading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
+  // Valeur par défaut correctement typée
   const form = useForm<z.infer<typeof imageSchema>>({
     resolver: zodResolver(imageSchema),
     defaultValues: {
-      imageLink: data.imageLink || null
+      imageLink: null
     }
   });
 
@@ -35,30 +38,35 @@ const ImageUpload = ({ onNext, onPrev }: ImageUploadProps) => {
     try {
       setIsUploading(true);
       
-      // Step 1: Get a short-lived upload URL
-      const postUrl = await generateUploadUrl();
-      
-      // Step 2: Upload the file to the URL
-      const result = await fetch(postUrl, {
-        method: "POST",
-        headers: { "Content-Type": values.imageLink!.type },
-        body: values.imageLink,
-      });
+      // Si aucun nouveau fichier n'est sélectionné, on garde l'image existante
+      if (!values.imageLink && data.imageLink) {
+        onNext();
+        return;
+      }
 
-      if (!result.ok) throw new Error("Upload failed");
+      // Si un nouveau fichier est sélectionné
+      if (values.imageLink instanceof File) {
+        // Step 1: Get a short-lived upload URL
+        const postUrl = await generateUploadUrl();
+        
+        // Step 2: Upload the file to the URL
+        const result = await fetch(postUrl, {
+          method: "POST",
+          headers: { "Content-Type": values.imageLink.type },
+          body: values.imageLink,
+        });
+
+        if (!result.ok) throw new Error("Upload failed");
+        
+        const { storageId } = await result.json();
+        
+        // Step 3: Save the newly allocated storage id to the form data
+        setData({ imageLink: storageId });
+      }
       
-      const { storageId } = await result.json();
-      
-      // Step 3: Save the newly allocated storage id to the form data
-      setData({ imageLink: storageId });
       onNext();
       
     } catch (error) {
-      // toast({
-      //   title: "Erreur d'upload",
-      //   description: "L'image n'a pas pu être téléchargée",
-      //   variant: "destructive",
-      // });
       console.error("Upload error:", error);
     } finally {
       setIsUploading(false);
@@ -76,20 +84,49 @@ const ImageUpload = ({ onNext, onPrev }: ImageUploadProps) => {
               <FormLabel>Image du plat</FormLabel>
               <FormControl>
                 <div className="flex flex-col gap-4">
+                  {/* Afficher l'image actuelle si elle existe */}
+                  {data.imageLink && getImageUrl && (
+                    <div className="relative w-full h-48 rounded-lg overflow-hidden">
+                      <Image
+                        src={getImageUrl}
+                        alt="Image actuelle du plat"
+                        fill
+                        className="object-cover"
+                      />
+                      <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+                        <p className="text-white font-medium">
+                          Image actuelle
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
                   <Input
                     type="file"
                     accept="image/*"
                     onChange={(e) => {
                       const file = e.target.files?.[0];
                       if (file) {
+                        setSelectedFile(file);
                         field.onChange(file);
+                      } else {
+                        // Réinitialiser à null si aucun fichier n'est sélectionné
+                        field.onChange(null);
                       }
                     }}
                   />
-                  {field.value && (
+                  {selectedFile ? (
                     <div className="mt-2">
                       <p className="text-sm text-muted-foreground">
-                        Fichier sélectionné: {(field.value as File).name}
+                        Nouveau fichier sélectionné: {selectedFile.name}
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="mt-2">
+                      <p className="text-sm text-muted-foreground">
+                        {data.imageLink 
+                          ? "Aucun nouveau fichier sélectionné. L'image actuelle sera conservée." 
+                          : "Aucune image sélectionnée"}
                       </p>
                     </div>
                   )}
@@ -111,7 +148,7 @@ const ImageUpload = ({ onNext, onPrev }: ImageUploadProps) => {
           </Button>
           <Button 
             type="submit" 
-            disabled={!form.watch("imageLink") || isUploading}
+            disabled={isUploading}
           >
             {isUploading ? (
               <>
