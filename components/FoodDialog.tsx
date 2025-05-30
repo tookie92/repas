@@ -1,63 +1,69 @@
+// components/FoodDialog.tsx
 "use client";
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import FormFood from "./FormFood";
-import { Id } from "@/convex/_generated/dataModel";
-import { useEffect } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+
 import { useFoodFormStore } from "@/store/foodFormStore";
-import { api } from "@/convex/_generated/api";
-import { useQuery } from "convex/react";
-import { DialogTrigger } from "@radix-ui/react-dialog";
-import { Button } from "./ui/button";
-import { Edit2Icon } from "lucide-react";
+import { Id } from "@/convex/_generated/dataModel";
+import { ReactNode } from "react";
+import FormFood from "./FormFood";
 
-type FoodDialogProps = {
-  open: boolean;
-  onClose: () => void;
-  foodId?: Id<"food">;
+interface FoodDialogProps {
   categoryId: Id<"categories">;
-};
+  foodToEdit?: {
+    _id: Id<"food">;
+    title: string;
+    description: string;
+    person: number;
+    imageLink: Id<"_storage">;
+    steps: Array<{ stepNumber: number; instruction: string }>;
+    ingredients: Array<{ ingredientId: Id<"ingredients">; quantity: string }>;
+  };
+  children: ReactNode;
+}
 
-const FoodDialog = ({ open, onClose, foodId, categoryId }: FoodDialogProps) => {
-  const { setData } = useFoodFormStore();
-
-  const food = useQuery(api.food.getFood, foodId ? { foodId } : "skip");
-
-  useEffect(() => {
-    if (food && foodId) {
-      setData({
-        _id: foodId,
-        title: food.title,
-        description: food.description,
-        person: food.person,
-        imageLink: food.imageLink,
-        steps: food.steps,
-        ingredients: food.ingredients.map((i, index) => ({
-          id: String(index),
-          ingredientId: i.ingredientId,
-          name: "", // optionnel si déjà connu ailleurs
-          quantity: i.quantity,
-          unit: "", // optionnel
-        })),
-      });
-    }
-  }, [food, foodId, setData]);
+export const FoodDialog = ({ categoryId, foodToEdit, children }: FoodDialogProps) => {
+  const { setData, reset } = useFoodFormStore();
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-        <DialogTrigger >
-          <Button variant="ghost" className="h-auto w-auto p-2">
-            <Edit2Icon className="h-4 w-4" />
-          </Button>
-      <DialogContent className="max-w-2xl max-h-screen overflow-y-auto">
+    <Dialog>
+      <DialogTrigger asChild>
+        <div 
+          onClick={() => {
+            reset();
+            if (foodToEdit) {
+              // Transformer les ingrédients pour le format du formulaire
+              const transformedIngredients = foodToEdit.ingredients.map(ing => ({
+                id: crypto.randomUUID(),
+                ingredientId: ing.ingredientId,
+                name: "", // À charger séparément si nécessaire
+                quantity: ing.quantity,
+                unit: "", // À charger séparément si nécessaire
+              }));
+
+              setData({
+                _id: foodToEdit._id,
+                title: foodToEdit.title,
+                description: foodToEdit.description,
+                person: foodToEdit.person,
+                imageLink: foodToEdit.imageLink,
+                steps: foodToEdit.steps,
+                ingredients: transformedIngredients,
+              });
+            }
+          }}
+        >
+          {children}
+        </div>
+      </DialogTrigger>
+      <DialogContent className="w-full">
         <DialogHeader>
-          <DialogTitle>{foodId ? "Modifier" : "Ajouter"} un plat</DialogTitle>
+          <DialogTitle className="text-2xl">
+            {foodToEdit ? "Modifier la recette" : "Nouvelle recette"}
+          </DialogTitle>
         </DialogHeader>
         <FormFood catId={categoryId} />
       </DialogContent>
-    </DialogTrigger>
     </Dialog>
   );
 };
-
-export default FoodDialog;

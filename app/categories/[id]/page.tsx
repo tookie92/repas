@@ -1,7 +1,7 @@
 "use client";
 
 import { FoodImage } from '@/components/FoodImage';
-import FormFood from '@/components/FormFood';
+import { FoodDialog } from '@/components/FoodDialog'; // Modifié
 import { Header } from '@/components/Header';
 import { Button } from '@/components/ui/button';
 import {
@@ -22,8 +22,6 @@ import { useMutation, useQuery } from 'convex/react';
 import { EyeIcon, PencilIcon, Trash2Icon } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
-import { useFoodFormStore } from '@/store/foodFormStore'; // ✅ Assure-toi d'importer le store
-import FoodDialog from '@/components/FoodDialog';
 
 const CategoriesPage = () => {
   const router = useRouter();
@@ -31,9 +29,6 @@ const CategoriesPage = () => {
   const categoryId = params.id as Id<"categories">;
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [foodToEdit, setFoodToEdit] = useState<any | null>(null); // ✅ pour l’édition
-  const { setData, reset } = useFoodFormStore(); // ✅ depuis le store
-
   const categoryWithFoods = useQuery(api.categories.getCategoryWithFoods, { categoryId });
   const deleteFood = useMutation(api.food.deleteFood);
 
@@ -63,26 +58,12 @@ const CategoriesPage = () => {
           className='bg-white text-black rounded-lg p-2 w-full'
         />
 
-        {/* Ajouter une nouvelle recette */}
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button
-              onClick={() => {
-                reset(); // 🧼 reset form
-                setFoodToEdit(null); // 👈 on s'assure qu'on est en mode ajout
-              }}
-              className="bg-myGreen hover:bg-myDarkGreen"
-            >
-              Ajouter une recette
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="w-full">
-            <DialogHeader>
-              <DialogTitle className="text-2xl">Nouvelle Recette</DialogTitle>
-            </DialogHeader>
-            <FormFood catId={categoryId} />
-          </DialogContent>
-        </Dialog>
+        {/* Utilisation du FoodDialog pour l'ajout */}
+        <FoodDialog categoryId={categoryId}>
+          <Button className="bg-myGreen hover:bg-myDarkGreen">
+            Ajouter une recette
+          </Button>
+        </FoodDialog>
       </div>
 
       {/* Liste des recettes */}
@@ -108,27 +89,12 @@ const CategoriesPage = () => {
                   className='text-myGreen w-5 h-5 hover:text-myDarkGreen'
                 />
 
-                {/* Bouton Modifier */}
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <PencilIcon
-                      onClick={() => {
-                        setData(item); // ✅ injecte la recette dans le form
-                        setFoodToEdit(item);
-                      }}
-                      className='text-myGreen w-5 h-5 hover:text-myDarkGreen'
-                    />
-                  </DialogTrigger>
-                  <DialogContent className="w-full">
-                    <DialogHeader>
-                      <DialogTitle className="text-2xl">Modifier Recette</DialogTitle>
-                    </DialogHeader>
-                    <FormFood catId={categoryId} />
-                  </DialogContent>
-                </Dialog>
-                {/* <FoodDialog categoryId={categoryId}  open={foodToEdit === item} onClose={() => setFoodToEdit(null)} foodId={item._id} /> */}
+                {/* Utilisation du FoodDialog pour l'édition */}
+                <FoodDialog categoryId={categoryId} foodToEdit={item}>
+                  <PencilIcon className='text-myGreen w-5 h-5 hover:text-myDarkGreen' />
+                </FoodDialog>
 
-                {/* Bouton Supprimer */}
+                {/* Bouton Supprimer (gardé séparé car logique différente) */}
                 <Dialog>
                   <DialogTrigger asChild>
                     <Trash2Icon className='text-myGreen w-5 h-5 hover:text-myDarkGreen' />

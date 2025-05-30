@@ -8,30 +8,29 @@ export const getCategories = query({
   },
 });
 
+// Dans votre query Convex (api.categories.ts)
 export const getCategoryWithFoods = query({
   args: { categoryId: v.id("categories") },
   handler: async (ctx, args) => {
     const category = await ctx.db.get(args.categoryId);
-    
-    if (!category) return null;
-    
+    if (!category) throw new Error("Category not found");
+
     const foods = await ctx.db
       .query("food")
       .withIndex("by_category", q => q.eq("categoryId", args.categoryId))
       .collect();
 
-    // Ajoutez les URLs d'images
-    const foodsWithImages = await Promise.all(
-      foods.map(async (food) => ({
-        ...food,
-        imageUrl: food.imageLink ? await ctx.storage.getUrl(food.imageLink) : null
-      }))
+    const foodsWithIngredients = await Promise.all(
+      foods.map(async food => {
+        const ingredients = await ctx.db
+          .query("foodIngredients")
+          .withIndex("by_food", q => q.eq("foodId", food._id))
+          .collect();
+        return { ...food, ingredients };
+      })
     );
-    
-    return {
-      ...category,
-      food: foodsWithImages,
-    };
+
+    return { ...category, food: foodsWithIngredients };
   },
 });
 
