@@ -128,9 +128,9 @@ const CategoriesPage = () => {
                       <p>Êtes-vous sûr de vouloir supprimer cette recette ?</p>
                     </DialogDescription>
                     </DialogHeader>
-                    <DialogFooter className='flex h-full bg-yellow-300 items-center justify-center  mt-4'>
+                    <DialogFooter className='flex h-full  items-center justify-center  mt-4'>
                         <DialogClose asChild>
-                        <Button type="button" variant="secondary">
+                        <Button onClick={()=> router} type="button" variant="secondary">
                           Close
                         </Button>
                       </DialogClose>
