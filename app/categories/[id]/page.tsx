@@ -22,6 +22,7 @@ import { useMutation, useQuery } from 'convex/react';
 import { EyeIcon, PencilIcon, Trash2Icon } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
+import { useUser } from '@clerk/nextjs';
 
 const CategoriesPage = () => {
   const router = useRouter();
@@ -31,6 +32,24 @@ const CategoriesPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const categoryWithFoods = useQuery(api.categories.getCategoryWithFoods, { categoryId });
   const deleteFood = useMutation(api.food.deleteFood);
+
+    // Récupération de l'utilisateur Clerk
+  const { user} = useUser();
+  
+  // Récupération de l'utilisateur Convex basé sur le clerkId
+  const convexUser = useQuery(
+    api.users.getUserByClerkId, 
+    user?.id ? { clerkId: user.id } : "skip"
+  );
+
+   if (!convexUser) {
+    return (
+      <div className="flex justify-center items-center p-8">
+        <div className="text-lg">Synchronisation des données utilisateur...</div>
+      </div>
+    );
+  }
+
 
   const filteredFoods = categoryWithFoods?.food.filter((food) =>
     food.title.toLowerCase().includes(searchQuery.toLowerCase())
@@ -46,7 +65,7 @@ const CategoriesPage = () => {
 
   return (
     <div className='relative flex flex-col gap-y-3 px-8 mt-7'>
-      <Header back />
+      <Header back login />
 
       {/* Recherche + Ajout */}
       <div className='flex flex-row gap-x-3 mt-18 items-center'>
@@ -113,7 +132,7 @@ const CategoriesPage = () => {
                       <Button
                         className="bg-red-500 hover:bg-red-600"
                         onClick={() => {
-                          deleteFood({ foodId: item._id }).then(() => router.refresh());
+                          deleteFood({ foodId: item._id , userId: convexUser._id }).then(() => router.refresh());
                         }}
                       >
                         Supprimer
