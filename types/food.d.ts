@@ -9,7 +9,8 @@ export interface FormIngredient {
 }
 
 export interface FoodFormValues {
-  _id?: Id<"food">; // Optionnel pour les mises à jour
+  _id?: Id<"food">;
+  userId: Id<"users">, // Optionnel pour les mises à jour
   title: string;
   description: string;
   person: number;

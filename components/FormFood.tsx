@@ -8,11 +8,12 @@ import ImageUpload from "./step/ImageUpload";
 import Confirmation from "./step/Confirmation";
 
 import { useFoodFormStore } from "@/store/foodFormStore";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { FormIngredient } from "@/types/food";
 import { useRouter } from "next/navigation";
+import { useUser } from "@clerk/nextjs"; // Import Clerk hook
 
 // Types pour les props des composants
 type StepComponentProps = {
@@ -48,12 +49,30 @@ const FormFood = ({ catId }: { catId: string }) => {
   const [step, setStep] = useState(0);
   const { data, reset } = useFoodFormStore();
   const addFoodMutation = useMutation(api.food.upsertFood);
+  
+  // Récupération de l'utilisateur Clerk
+  const { user, isLoaded } = useUser();
+  
+  // Récupération de l'utilisateur Convex basé sur le clerkId
+  const convexUser = useQuery(
+    api.users.getUserByClerkId, 
+    user?.id ? { clerkId: user.id } : "skip"
+  );
 
   const next = () => setStep((s) => Math.min(s + 1, steps.length - 1));
   const prev = () => setStep((s) => Math.max(s - 1, 0));
 
   const handleSubmit = async () => {
     try {
+      // Vérification que l'utilisateur est connecté et récupéré
+      if (!isLoaded || !user) {
+        throw new Error("Utilisateur non connecté");
+      }
+
+      if (!convexUser?._id) {
+        throw new Error("Utilisateur non trouvé dans la base de données");
+      }
+
       // Vérifie les champs obligatoires
       const requiredFields = ["title", "description", "imageLink"];
       const missingFields = requiredFields.filter(
@@ -78,8 +97,21 @@ const FormFood = ({ catId }: { catId: string }) => {
         })
       );
 
-      // Mutation upsert
+      console.log("Données envoyées à la mutation:", {
+        userId: convexUser._id,
+        foodId: data._id,
+        title: data.title,
+        description: data.description,
+        person: data.person || 1,
+        categoryId: catId,
+        imageStorageId: data.imageLink,
+        steps: data.steps || [],
+        ingredients: transformedIngredients,
+      });
+
+      // Mutation upsert avec l'ID de l'utilisateur Convex
       await addFoodMutation({
+        userId: convexUser._id, // ID de l'utilisateur dans Convex
         foodId: data._id, // présent uniquement en cas d'édition
         title: data.title!,
         description: data.description!,
@@ -99,12 +131,37 @@ const FormFood = ({ catId }: { catId: string }) => {
     }
   };
 
+  // Affichage de chargement si l'utilisateur n'est pas encore chargé
+  if (!isLoaded) {
+    return (
+      <div className="flex justify-center items-center p-8">
+        <div className="text-lg">Chargement de lutilisateur...</div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="flex justify-center items-center p-8">
+        <div className="text-lg text-red-500">Vous devez être connecté pour accéder à cette page</div>
+      </div>
+    );
+  }
+
+  if (!convexUser) {
+    return (
+      <div className="flex justify-center items-center p-8">
+        <div className="text-lg">Synchronisation des données utilisateur...</div>
+      </div>
+    );
+  }
+
   const StepComponent = steps[step].component;
 
   return (
     <div className="flex flex-col gap-y-5 p-4">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold mb-2">Ajouter un plat</h1>
+        <h1 className="text-2xl font-bold mb-2">Ajouter un plat {convexUser._id}</h1>
         <div className="flex justify-between items-center mb-2">
           <p className="text-gray-600">
             Étape {step + 1} sur {steps.length}

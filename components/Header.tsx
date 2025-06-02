@@ -1,12 +1,16 @@
 "use client"
+
+import { ClerkLoaded, SignedOut ,  SignedIn, UserButton, SignInButton} from '@clerk/nextjs'
 import { ChevronLeft } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import React from 'react'
+import { Button } from './ui/button'
 
 type HeaderProps = {
-    back?: boolean
+    back?: boolean,
+    login: boolean
 }
-export const Header = ({back = false}: HeaderProps) => {
+export const Header = ({back = false, login =true}: HeaderProps) => {
   const router = useRouter()
   return (
     <div className='fixed flex top-0 left-0 w-full h-16 z-20  items-center bg-beige text-black px-8 justify-between'>
@@ -16,7 +20,18 @@ export const Header = ({back = false}: HeaderProps) => {
         </div>
       }
        <p className='text-2xl font-bold text-myGreen'>Lisa</p>
-       {back && <div/>}
+       {login && <div>
+          <ClerkLoaded>
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
+            <SignedOut>
+              <SignInButton mode="modal" >
+                <Button>Connexion</Button>
+              </SignInButton>
+            </SignedOut>
+          </ClerkLoaded>
+        </div>}
        
     </div>
     
