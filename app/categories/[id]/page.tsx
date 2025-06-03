@@ -1,19 +1,9 @@
 "use client";
 
 import { FoodImage } from '@/components/FoodImage';
-import { FoodDialog } from '@/components/FoodDialog'; // Modifié
+
 import { Header } from '@/components/Header';
 import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { api } from '@/convex/_generated/api';
@@ -23,11 +13,14 @@ import { EyeIcon, PencilIcon, Trash2Icon } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { useUser } from '@clerk/nextjs';
+import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer';
+import { FoodDialog } from '@/components/FoodDialog';
 
 const CategoriesPage = () => {
   const router = useRouter();
   const params = useParams();
   const categoryId = params.id as Id<"categories">;
+  const [open, setOpen] = useState(false)
 
   const [searchQuery, setSearchQuery] = useState('');
   const categoryWithFoods = useQuery(api.categories.getCategoryWithFoods, { categoryId });
@@ -42,13 +35,13 @@ const CategoriesPage = () => {
     user?.id ? { clerkId: user.id } : "skip"
   );
 
-   if (!convexUser) {
-    return (
-      <div className="flex justify-center items-center p-8">
-        <div className="text-lg">Synchronisation des données utilisateur...</div>
-      </div>
-    );
-  }
+  //  if (!convexUser) {
+  //   return (
+  //     <div className="flex justify-center items-center p-8">
+  //       <div className="text-lg">Synchronisation des données utilisateur...</div>
+  //     </div>
+  //   );
+  // }
 
 
   const filteredFoods = categoryWithFoods?.food.filter((food) =>
@@ -78,7 +71,7 @@ const CategoriesPage = () => {
         />
 
         {/* Utilisation du FoodDialog pour l'ajout */}
-        <FoodDialog categoryId={categoryId}>
+        <FoodDialog  categoryId={categoryId}>
           <Button className="bg-myGreen hover:bg-myDarkGreen">
             Ajouter une recette
           </Button>
@@ -114,21 +107,23 @@ const CategoriesPage = () => {
                 </FoodDialog>
 
                 {/* Bouton Supprimer (gardé séparé car logique différente) */}
-                <Dialog>
-                  <DialogTrigger asChild>
+                <Drawer open={open} onOpenChange={setOpen}>
+                  <DrawerTrigger asChild>
                     <Trash2Icon className='text-myGreen w-5 h-5 hover:text-myDarkGreen' />
-                  </DialogTrigger>
-                  <DialogContent className="w-full">
-                    <DialogHeader>
-                      <DialogTitle className="text-2xl">Supprimer la recette</DialogTitle>
-                      <DialogDescription>
+                  </DrawerTrigger>
+                  <DrawerContent className="w-full">
+                    <DrawerHeader>
+                      <DrawerTitle className="text-2xl">Supprimer la recette</DrawerTitle>
+                      <DrawerDescription>
                         Êtes-vous sûr de vouloir supprimer cette recette ?
-                      </DialogDescription>
-                    </DialogHeader>
-                    <DialogFooter className='flex justify-end gap-x-3 mt-4'>
-                      <DialogClose asChild>
+                      </DrawerDescription>
+                    </DrawerHeader>
+                    <DrawerFooter className='flex justify-end gap-x-3 mt-4'>
+                      <DrawerClose asChild>
                         <Button variant="secondary">Annuler</Button>
-                      </DialogClose>
+                      </DrawerClose>
+                    {!convexUser ? (<></>):(
+
                       <Button
                         className="bg-red-500 hover:bg-red-600"
                         onClick={() => {
@@ -137,9 +132,10 @@ const CategoriesPage = () => {
                       >
                         Supprimer
                       </Button>
-                    </DialogFooter>
-                  </DialogContent>
-                </Dialog>
+                    )}
+                    </DrawerFooter>
+                  </DrawerContent>
+                </Drawer>
               </div>
             </div>
           </div>

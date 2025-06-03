@@ -44,7 +44,11 @@ const steps: StepConfig[] = [
   },
 ];
 
-const FormFood = ({ catId }: { catId: string }) => {
+interface FormFoodProps {
+  catId: string;
+  setOpen?: (open: boolean) => void;
+}
+const FormFood = ({ catId, setOpen }: FormFoodProps) => {
   const router = useRouter();
   const [step, setStep] = useState(0);
   const { data, reset } = useFoodFormStore();
@@ -120,11 +124,19 @@ const FormFood = ({ catId }: { catId: string }) => {
         imageStorageId: data.imageLink as Id<"_storage">,
         steps: data.steps || [],
         ingredients: transformedIngredients,
+      }).then(() => {
+        console.log("Plat ajouté ou modifié avec succès");
+        router.refresh();
+        reset();
+        setStep(0);
+        if (setOpen) {
+          setOpen(false); // Ferme le drawer après succès
+        }
       });
 
       reset(); // Réinitialise le store
       setStep(0); // Retour au premier step
-      router.refresh(); // Rechargement
+       // Rechargement
     } catch (error) {
       console.error("Erreur lors de la soumission:", error);
       // Tu peux afficher une notification ici
@@ -161,7 +173,7 @@ const FormFood = ({ catId }: { catId: string }) => {
   return (
     <div className="flex flex-col gap-y-5 p-4">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold mb-2">Ajouter un plat {convexUser._id}</h1>
+        <h1 className="text-2xl font-bold mb-2">Ajouter un plat</h1>
         <div className="flex justify-between items-center mb-2">
           <p className="text-gray-600">
             Étape {step + 1} sur {steps.length}

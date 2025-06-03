@@ -15,9 +15,7 @@ export default function Home() {
             Classic  made for you
           </p>
         
-            <p className=' font-sans text-xl  text-beige text-center'>
-              Try our ready in minute frozen meals
-            </p>
+          
       
         </div>
         <div className="flex flex-col gap-y-3 mt-7">

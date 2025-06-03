@@ -116,7 +116,7 @@ export const createCategory = mutation({
 
     return await ctx.db.insert("categories", {
       title: args.title,
-      imageLink: args.imageLink,
+      imageLink: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c",
       userId: args.userId,
     });
   },

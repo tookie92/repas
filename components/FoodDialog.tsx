@@ -1,12 +1,13 @@
 // components/FoodDialog.tsx
 "use client";
-
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-
 import { useFoodFormStore } from "@/store/foodFormStore";
 import { Id } from "@/convex/_generated/dataModel";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import FormFood from "./FormFood";
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "./ui/drawer";
+
+import { ScrollArea } from "./ui/scroll-area";
+
 
 interface FoodDialogProps {
   categoryId: Id<"categories">;
@@ -24,10 +25,12 @@ interface FoodDialogProps {
 
 export const FoodDialog = ({ categoryId, foodToEdit, children }: FoodDialogProps) => {
   const { setData, reset } = useFoodFormStore();
+  const [open, setOpen] = useState(false);
+
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
+    <Drawer open={open} onOpenChange={setOpen}>
+      <DrawerTrigger asChild>
         <div 
           onClick={() => {
             reset();
@@ -55,15 +58,18 @@ export const FoodDialog = ({ categoryId, foodToEdit, children }: FoodDialogProps
         >
           {children}
         </div>
-      </DialogTrigger>
-      <DialogContent className="w-full">
-        <DialogHeader>
-          <DialogTitle className="text-2xl">
+      </DrawerTrigger>
+      <DrawerContent className="w-full">
+        <DrawerHeader>
+          <DrawerTitle className="text-2xl">
             {foodToEdit ? "Modifier la recette" : "Nouvelle recette"}
-          </DialogTitle>
-        </DialogHeader>
-        <FormFood catId={categoryId} />
-      </DialogContent>
-    </Dialog>
+          </DrawerTitle>
+        </DrawerHeader>
+        <ScrollArea className="h-[60vh]">
+        <FormFood catId={categoryId} setOpen={(open)=>setOpen(open)} />
+        <div className="h-44 lg:h-3"/>
+        </ScrollArea>
+      </DrawerContent>
+    </Drawer>
   );
 };

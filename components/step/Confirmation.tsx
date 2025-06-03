@@ -2,6 +2,9 @@
 import React from "react";
 import { Button } from "../ui/button";
 import { useFoodFormStore } from "@/store/foodFormStore";
+import { ScrollArea } from "../ui/scroll-area";
+
+
 
 // Définition des propriétés attendues par le composant
 type ConfirmationProps = {
@@ -14,11 +17,13 @@ type ConfirmationProps = {
 
 const Confirmation = ({ onPrev, onSubmit }: ConfirmationProps) => {
   const { data } = useFoodFormStore();
+ 
   
   // Fonction qui gère la soumission
   const handleSubmit = async () => {
     try {
-      await onSubmit(); // On attend que la soumission se termine
+      await onSubmit();
+       // On attend que la soumission se termine
     } catch (error) {
       console.error("Erreur lors de la confirmation:", error);
       // Vous pourriez ajouter ici un message d'erreur pour l'utilisateur
@@ -30,15 +35,18 @@ const Confirmation = ({ onPrev, onSubmit }: ConfirmationProps) => {
       <h2 className="text-xl font-bold">Confirmer les informations</h2>
       
       {/* Aperçu des données du formulaire */}
-      <pre className="bg-gray-100 p-4 rounded-md">
-        {JSON.stringify(data, null, 2)}
-      </pre>
+      <ScrollArea className="w-full h-24">
+        <pre className="bg-gray-100 p-4 rounded-md">
+          {JSON.stringify(data, null, 2)}
+        </pre>
+      </ScrollArea>
       
       {/* Boutons de navigation */}
       <div className="flex gap-2">
         <Button onClick={onPrev} variant="outline">
           Retour
         </Button>
+        
         <Button onClick={handleSubmit}>
           Valider
         </Button>
