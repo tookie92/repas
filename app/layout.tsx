@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 
 import "./globals.css";
 import { ConvexClientProvider } from "./ConvexClientProvider";
-
-import { ClerkProviderWrapper } from "@/components/ClerkProviderWrapper";
+import { ClerkProvider } from "@clerk/nextjs";
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -26,16 +25,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-        <body >
-        <ClerkProviderWrapper>
-          <ConvexClientProvider>
-            <div className="h-screen bg-beige overflow-y-hidden">
-              {children}
-            </div>
-          </ConvexClientProvider>
-       </ClerkProviderWrapper>
-        </body>
-      </html>
+        <ClerkProvider>
+          <html lang="en">
+              <body >
+                <ConvexClientProvider>
+                  <div className="h-screen bg-beige overflow-y-hidden">
+                    {children}
+                  </div>
+                </ConvexClientProvider>
+              </body>
+            </html>
+       </ClerkProvider>
   );
 }
