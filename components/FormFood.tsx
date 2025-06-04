@@ -173,10 +173,10 @@ const FormFood = ({ catId, setOpen }: FormFoodProps) => {
   return (
     <div className="flex flex-col gap-y-5 p-4">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold mb-2">Ajouter un plat</h1>
+        <h1 className="text-2xl font-bold mb-2">Add a recipe</h1>
         <div className="flex justify-between items-center mb-2">
           <p className="text-gray-600">
-            Étape {step + 1} sur {steps.length}
+            Step {step + 1} on {steps.length}
           </p>
         </div>
         <div className="w-full h-1 bg-gray-200 rounded-full">

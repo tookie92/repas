@@ -32,7 +32,7 @@ const Confirmation = ({ onPrev, onSubmit }: ConfirmationProps) => {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-xl font-bold">Confirmer les informations</h2>
+      <h2 className="text-xl font-bold">Please check  the informations</h2>
       
       {/* Aperçu des données du formulaire */}
       <ScrollArea className="w-full h-24">
@@ -44,11 +44,11 @@ const Confirmation = ({ onPrev, onSubmit }: ConfirmationProps) => {
       {/* Boutons de navigation */}
       <div className="flex gap-2">
         <Button onClick={onPrev} variant="outline">
-          Retour
+          Back
         </Button>
         
         <Button onClick={handleSubmit}>
-          Valider
+          Validate
         </Button>
       </div>
     </div>

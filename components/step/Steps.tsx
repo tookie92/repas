@@ -40,19 +40,19 @@ const Steps = ({ onNext, onPrev }: StepsProps) => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <h2 className="text-xl font-bold">Étapes de préparation</h2>
+        <h2 className="text-xl font-bold">Steps of the preparations</h2>
         
         {fields.map((field, index) => (
           <div key={field.id} className="space-y-3 p-4 border rounded-lg">
             <div className="flex justify-between items-center">
-              <h3 className="font-medium">Étape {index + 1}</h3>
+              <h3 className="font-medium">Step {index + 1}</h3>
               <Button
                 type="button"
                 variant="destructive"
                 size="sm"
                 onClick={() => remove(index)}
               >
-                Supprimer
+                Delete
               </Button>
             </div>
             
@@ -65,7 +65,7 @@ const Steps = ({ onNext, onPrev }: StepsProps) => {
                   <FormControl>
                     <Textarea 
                       {...field} 
-                      placeholder="Décrivez cette étape en détail..." 
+                      placeholder="Describe the step in details..."
                       className="min-h-[100px]"
                     />
                   </FormControl>
@@ -85,15 +85,15 @@ const Steps = ({ onNext, onPrev }: StepsProps) => {
           })}
           className="w-full"
         >
-          + Ajouter une étape
+          + Add a step
         </Button>
 
         <div className="flex justify-between pt-4">
           <Button type="button" variant="outline" onClick={onPrev}>
-            Précédent
+            Previous
           </Button>
           <Button type="submit">
-            Suivant
+            Next
           </Button>
         </div>
       </form>

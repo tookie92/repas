@@ -1,0 +1,20 @@
+    {/* <Select
+                      onValueChange={(value) => {
+                        const selectedIngredient = allIngredients.find(ing => ing._id === value);
+                        field.onChange(value); // Value est toujours une string
+                        form.setValue(`ingredients.${index}.name`, selectedIngredient?.name || "");
+                        // form.setValue(`ingredients.${index}.unit`, selectedIngredient?.unit || "");
+                      }}
+                      value={field.value || undefined} // Convertit "" en undefined
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Choisissez un ingrédient" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {allIngredients.map((ingredient) => (
+                          <SelectItem key={ingredient._id} value={ingredient._id}>
+                            {ingredient.name} ({ingredient.unit})
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select> */}

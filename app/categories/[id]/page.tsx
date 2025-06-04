@@ -51,7 +51,7 @@ const CategoriesPage = () => {
   if (categoryWithFoods === undefined) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <p>Chargement en cours...</p>
+        <p>Loading...</p>
       </div>
     );
   }
@@ -64,7 +64,7 @@ const CategoriesPage = () => {
       <div className='flex flex-row gap-x-3 mt-18 items-center'>
         <Input
           type="text"
-          placeholder="Rechercher une recette"
+          placeholder="Find a recipe"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className='bg-white text-black rounded-lg p-2 w-full'
@@ -73,7 +73,7 @@ const CategoriesPage = () => {
         {/* Utilisation du FoodDialog pour l'ajout */}
         <FoodDialog  categoryId={categoryId}>
           <Button className="bg-myGreen hover:bg-myDarkGreen">
-            Ajouter une recette
+            Add Recipe
           </Button>
         </FoodDialog>
       </div>
@@ -94,7 +94,7 @@ const CategoriesPage = () => {
             <div className='flex-1'>
               <p className='text-myGreen text-lg font-bold'>{item.title}</p>
               <p className='text-myGreen line-clamp-2'>{item.description}</p>
-              <p className='text-myGreen'>Pour {item.person} personne{item.person > 1 ? 's' : ''}</p>
+              <p className='text-myGreen'>For {item.person} person{item.person > 1 ? 's' : ''}</p>
               <div className='flex gap-x-3 mt-2 items-center'>
                 <EyeIcon
                   onClick={() => router.push(`/categories/${categoryId}/food/${item._id}`)}
@@ -113,14 +113,14 @@ const CategoriesPage = () => {
                   </DrawerTrigger>
                   <DrawerContent className="w-full">
                     <DrawerHeader>
-                      <DrawerTitle className="text-2xl">Supprimer la recette</DrawerTitle>
+                      <DrawerTitle className="text-2xl">Delete the recipe</DrawerTitle>
                       <DrawerDescription>
-                        Êtes-vous sûr de vouloir supprimer cette recette ?
+                        Do you want to delete this recipe?
                       </DrawerDescription>
                     </DrawerHeader>
                     <DrawerFooter className='flex justify-end gap-x-3 mt-4'>
                       <DrawerClose asChild>
-                        <Button variant="secondary">Annuler</Button>
+                        <Button variant="secondary">Cancel</Button>
                       </DrawerClose>
                     {!convexUser ? (<></>):(
 

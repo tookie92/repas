@@ -33,18 +33,18 @@ const MesCategories = () => {
                 }}
             >
                 <CarouselContent>
-                    <CarouselItem>
-                       <Card className='w-full h-full px-3 flex cursor-pointer bg-myYellow border-none'>
+                    <CarouselItem className='basis-1/3'>
+                       <Card className='w-full h-full px-3 flex cursor-pointer items-center justify-center bg-myYellow/10 border border-dashed border-white/20 hover:border-myYellow'>
                             <Drawer>
                             <DrawerTrigger asChild>
-                                <CardContent className='flex text-white font-bold h-full items-center justify-center'>
-                                    Add your first category
+                                <CardContent className='flex text-xs text-white font-bold h-full items-center justify-center'>
+                                    + Add a category
                                 </CardContent>
                             </DrawerTrigger>
                             <DrawerContent className=''>
                                 <FormCategorie />
                             </DrawerContent>
-                        </Drawer>  
+                            </Drawer>  
                         </Card>
                     </CarouselItem>
                     {categories?.map((category, index) =>(

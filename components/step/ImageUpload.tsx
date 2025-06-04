@@ -81,7 +81,7 @@ const ImageUpload = ({ onNext, onPrev }: ImageUploadProps) => {
           name="imageLink"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Image du plat</FormLabel>
+              <FormLabel>Picture of the food</FormLabel>
               <FormControl>
                 <div className="flex flex-col gap-4">
                   {/* Afficher l'image actuelle si elle existe */}
@@ -95,7 +95,7 @@ const ImageUpload = ({ onNext, onPrev }: ImageUploadProps) => {
                       />
                       <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
                         <p className="text-white font-medium">
-                          Image actuelle
+                          Current Picture
                         </p>
                       </div>
                     </div>
@@ -118,15 +118,15 @@ const ImageUpload = ({ onNext, onPrev }: ImageUploadProps) => {
                   {selectedFile ? (
                     <div className="mt-2">
                       <p className="text-sm text-muted-foreground">
-                        Nouveau fichier sélectionné: {selectedFile.name}
+                        New File selected: {selectedFile.name}
                       </p>
                     </div>
                   ) : (
                     <div className="mt-2">
                       <p className="text-sm text-muted-foreground">
                         {data.imageLink 
-                          ? "Aucun nouveau fichier sélectionné. L'image actuelle sera conservée." 
-                          : "Aucune image sélectionnée"}
+                          ? "An existing picture is selected. the old will be kept."
+                          : "No Picture selected. Please upload an image."}
                       </p>
                     </div>
                   )}
@@ -144,7 +144,7 @@ const ImageUpload = ({ onNext, onPrev }: ImageUploadProps) => {
             onClick={onPrev}
             disabled={isUploading}
           >
-            Précédent
+            Previous
           </Button>
           <Button 
             type="submit" 
@@ -153,10 +153,10 @@ const ImageUpload = ({ onNext, onPrev }: ImageUploadProps) => {
             {isUploading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Envoi en cours...
+                Loading...
               </>
             ) : (
-              "Suivant"
+              "Next"
             )}
           </Button>
         </div>

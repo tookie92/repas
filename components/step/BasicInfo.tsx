@@ -37,7 +37,7 @@ const BasicInfo = ({ onNext }: BasicInfoProps) => {
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Titree</FormLabel>
+              <FormLabel>Title</FormLabel>
               <FormControl>
                 <Input placeholder="shadcn" {...field} />
               </FormControl>
@@ -81,7 +81,7 @@ const BasicInfo = ({ onNext }: BasicInfoProps) => {
           )}
         />
        
-        <Button className="mt-2" type="submit">Suivant</Button>
+        <Button className="mt-2" type="submit">Next</Button>
         </form>
     </Form>
   );

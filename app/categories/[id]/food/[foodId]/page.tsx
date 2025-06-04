@@ -28,7 +28,7 @@ const FoodPage = () => {
   if (categoryWithFoods === undefined || foodIngredients === undefined) {
     return (
       <div className='bg-beige flex-1 justify-center items-center'>
-        <p className='mt-4'>Chargement...</p>
+        <p className='mt-4'>Loading...</p>
       </div>
     );
   }
@@ -36,7 +36,7 @@ const FoodPage = () => {
     if (!categoryWithFoods || !food) {
     return (
       <div className='bg-beige flex-1 justify-center items-center'>
-        <p className='text-myGreen text-xl'>Plat ou catégorie non trouvé</p>
+        <p className='text-myGreen text-xl'>Food or category not found</p>
         {/* <Link href="/(root)/(tabs)/accueil" className='mt-4 bg-myGreen px-4 py-2 rounded-full'>
           <p className='text-beige'>Retour à l'accueil</p>
         </Link> */}
@@ -70,15 +70,15 @@ const FoodPage = () => {
 
             {/* Nombre de personnes */}
             {food.person <= 1 ? (
-              <p className='mt-2 text-myGreen'>Pour {food.person} personne</p>
+              <p className='mt-2 text-myGreen'>For {food.person} person</p>
             ) : (
-              <p className='mt-2 text-myGreen'>Pour {food.person} personnes</p>
+              <p className='mt-2 text-myGreen'>For {food.person} persons</p>
             )}
           </div>
 
           {/* Ingrédients */}
           <div className='flex flex-col gap-y-2 w-full mt-4'>
-            <p className='font-sans text-myGreen text-xl uppercase'>Ingrédients</p>
+            <p className='font-sans text-myGreen text-xl uppercase'>Ingredients</p>
             <div className='h-[0.5px] bg-myYellow' />
             {foodIngredients?.map((foodIngredient) =>{ 
                if (!foodIngredient || foodIngredient === null) {
@@ -98,7 +98,7 @@ const FoodPage = () => {
 
           {/* Étapes de préparation */}
           <div className='flex flex-col gap-y-2 w-full mt-4'>
-            <p className='font-sans text-myGreen text-xl uppercase'>Étapes de préparation</p>
+            <p className='font-sans text-myGreen text-xl uppercase'>Steps of the preparation</p>
             <div className='h-[0.5px] bg-myYellow' />
             {food.steps.map((step, index) => (
               <div key={index} className='flex flex-col gap-y-4 mt-4'>
@@ -107,7 +107,7 @@ const FoodPage = () => {
                   <div className='w-8 h-8 bg-myGreen rounded-full flex items-center justify-center'>
                     <p className='text-beige font-bold text-lg'>{step.stepNumber}</p>
                   </div>
-                  <p className='text-myGreen font-bold text-lg'>Étape {step.stepNumber}</p>
+                  <p className='text-myGreen font-bold text-lg'>Step {step.stepNumber}</p>
                 </div>
 
                 {/* Instruction de l'étape */}
