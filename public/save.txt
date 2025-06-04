@@ -18,3 +18,13 @@
                         ))}
                       </SelectContent>
                     </Select> */}
+
+                     {/* <CardHeader className='relative  h-[350px] w-full'>
+        </CardHeader> */}
+        <CardContent className='a flex  text-white font-bold items-center justify-center'>
+            <Image src={image} alt={title} fill objectFit='cover'className=' object-cover rounded-lg w-full relative' />
+           {title}
+           {/* <div  className='flex absolute top w-full  h-full'>
+            <ViewIcon onClick={()=> router.push(link)} className='text-myGreen w-5 h-5 hover:text-myDarkGreen' />
+           </div> */}
+        </CardContent>
