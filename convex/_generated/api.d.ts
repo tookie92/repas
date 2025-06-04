@@ -18,7 +18,6 @@ import type * as food from "../food.js";
 import type * as foodIngredients from "../foodIngredients.js";
 import type * as http from "../http.js";
 import type * as ingredients from "../ingredients.js";
-import type * as seed from "../seed.js";
 import type * as storage from "../storage.js";
 import type * as users from "../users.js";
 
@@ -36,7 +35,6 @@ declare const fullApi: ApiFromModules<{
   foodIngredients: typeof foodIngredients;
   http: typeof http;
   ingredients: typeof ingredients;
-  seed: typeof seed;
   storage: typeof storage;
   users: typeof users;
 }>;
