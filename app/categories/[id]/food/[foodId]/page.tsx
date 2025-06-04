@@ -45,7 +45,7 @@ const FoodPage = () => {
   }
   return (
     <div className='relative bg-beige h-full'>
-      <Header back/>
+      <Header login back/>
       <ScrollArea className='h-[100vh] w-full '>
         <FoodImage
           storageId={food.imageLink}
