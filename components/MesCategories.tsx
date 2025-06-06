@@ -26,9 +26,9 @@ const MesCategories = () => {
     imageLink: string;
   } | null>(null);
 
-  if (!convexUser) return null;
 
-  const monuserId = convexUser._id;
+
+  const monuserId = convexUser?._id;
 
   const handleDelete = async (categoryId: Id<"categories">) => {
     const confirmed = confirm("Are you sure you want to delete this category?");
