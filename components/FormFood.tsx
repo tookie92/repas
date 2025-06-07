@@ -171,7 +171,7 @@ const FormFood = ({ catId, setOpen }: FormFoodProps) => {
   const StepComponent = steps[step].component;
 
   return (
-    <div className="flex flex-col gap-y-5 p-4">
+    <div className="flex flex-col gap-y-5 ">
       <div className="mb-6">
         <h1 className="text-2xl font-bold mb-2">Add a recipe</h1>
         <div className="flex justify-between items-center mb-2">

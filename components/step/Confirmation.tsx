@@ -35,7 +35,7 @@ const Confirmation = ({ onPrev, onSubmit }: ConfirmationProps) => {
       <h2 className="text-xl font-bold">Please check  the informations</h2>
       
       {/* Aperçu des données du formulaire */}
-      <ScrollArea className="w-full h-24">
+      <ScrollArea className="w-full h-72 overflow-y-auto p-4 bg-white rounded-md shadow-sm">
         <pre className="bg-gray-100 p-4 rounded-md">
           {JSON.stringify(data, null, 2)}
         </pre>

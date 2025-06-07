@@ -11,7 +11,7 @@ type FooterProps={
 export const footerItem : FooterProps[] = [
     {
     name: "Accueil",
-    link: "/",
+    link: "/bienvenue",
     icon: HouseIcon,
   },
     {

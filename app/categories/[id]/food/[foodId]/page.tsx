@@ -47,10 +47,15 @@ const FoodPage = () => {
     <div className='relative bg-beige h-full'>
       <Header login back/>
       <ScrollArea className='h-[100vh] w-full '>
-        <FoodImage
-          storageId={food.imageLink}
-           className='w-full h-[350px] mb-4'
-        />
+        <div className='w-full h-[400px] relative mt-4'>
+          {/* Image du plat */}
+          <FoodImage
+            width={800}
+            height={800}
+            storageId={food.imageLink}
+            className='h-full w-full object-cover'
+          />
+        </div>
 
         {/* contenu */}
         <div className='  p-4 flex items-start flex-col gap-y-3'>

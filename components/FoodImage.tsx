@@ -9,9 +9,11 @@ import Image from "next/image";
 interface FoodImageProps {
   storageId: Id<'_storage'> | null;
   className?: string;
+  width?: number;
+  height?: number;
 }
 
-export const FoodImage = ({ storageId, className }: FoodImageProps) => {
+export const FoodImage = ({ storageId, className, width, height }: FoodImageProps) => {
   const [error, setError] = useState(false);
   const imageUrl = useQuery(api.food.getImageUrl, storageId ? { storageId } : 'skip');
 
@@ -22,8 +24,8 @@ export const FoodImage = ({ storageId, className }: FoodImageProps) => {
   if (!storageId || !imageUrl) {
     return (
       <Image
-        width={20}
-        height={20}
+        width={width || 80}
+        height={height || 80}
         alt="Placeholder Image"
         src={"/placeholder-image.jpg"}
         className={className}
@@ -33,8 +35,8 @@ export const FoodImage = ({ storageId, className }: FoodImageProps) => {
 
   return (
     <Image
-        width={80}
-        height={80}
+        width={width || 80}
+        height={height || 80}
         alt="Placeholder Image"
         src={error?"/placeholder-image.jpg":imageUrl}
         className={className}

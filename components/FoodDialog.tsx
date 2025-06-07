@@ -59,13 +59,13 @@ export const FoodDialog = ({ categoryId, foodToEdit, children }: FoodDialogProps
           {children}
         </div>
       </DrawerTrigger>
-      <DrawerContent className="w-full">
-        <DrawerHeader>
+      <DrawerContent className="w-full h-4/5 p-8">
+        <DrawerHeader className="p-0">
           <DrawerTitle className="text-2xl">
-            {foodToEdit ? "Modifier la recette" : "Nouvelle recette"}
+            {foodToEdit ? "Edit the recipe" : "New recipe"}
           </DrawerTitle>
         </DrawerHeader>
-        <ScrollArea className="h-[60vh]">
+        <ScrollArea className="h-full">
         <FormFood catId={categoryId} setOpen={(open)=>setOpen(open)} />
         <div className="h-44 lg:h-3"/>
         </ScrollArea>
